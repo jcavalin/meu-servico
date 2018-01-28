@@ -18,7 +18,8 @@
                       <q-icon name="keyboard_arrow_left" />
                   </q-btn>
                   <div class="q-toolbar-title">
-                      Adicionar escala
+                      <span v-if="form.id">Atualizar escala</span>
+                      <span v-else>Adicionar escala</span>
                   </div>
               </q-toolbar>
               <div class="layout-padding">
@@ -30,22 +31,28 @@
                            @blur="$v.form.folga.$touch"
                            @keyup.enter="submit"
                            :error="$v.form.folga.$error"/>
-                  <q-datetime v-model="form.preta" type="date" float-label="Data da última preta" format="DD/MM/YYYY"
+                  <q-datetime v-model="form.preta" type="date" float-label="Data da preta" format="DD/MM/YYYY"
                               @blur="$v.form.preta.$touch"
                               @keyup.enter="submit"
                               :error="$v.form.preta.$error" />
-                  <q-datetime v-model="form.vermelha" type="date" float-label="Data da última vermelha" format="DD/MM/YYYY"
+                  <q-datetime v-model="form.vermelha" type="date" float-label="Data da vermelha" format="DD/MM/YYYY"
                               @blur="$v.form.vermelha.$touch"
                               @keyup.enter="submit"
                               :error="$v.form.vermelha.$error" />
 
-                  <q-btn icon="add" color="primary" @click="submit" class="full-width">Incluir escala</q-btn>
+                  <q-btn icon="add" color="primary" @click="submit" class="full-width">
+                      <span v-if="form.id">Alterar escala</span>
+                      <span v-else>Incluir escala</span>
+                  </q-btn>
+                  <q-btn icon="delete_forever" color="negative" v-if="form.id" @click="excluirEscala" class="full-width margin-top">
+                      <span >Excluir escala</span>
+                  </q-btn>
               </div>
           </q-modal-layout>
       </q-modal>
 
       <q-fixed-position corner="bottom-right" :offset="[18, 18]">
-          <q-btn round color="primary" @click="$refs.escalaModal.open()" title="Adicionar escala">
+          <q-btn round color="primary" @click="adicionarEscala" title="Adicionar escala">
               <q-icon name="add" />
           </q-btn>
       </q-fixed-position>
@@ -66,6 +73,7 @@ export default {
     return {
       showDate: new Date(),
       form: {
+        id: null,
         nome: null,
         folga: null,
         preta: null,
@@ -77,9 +85,36 @@ export default {
           escalas = escalas || []
           return escalas
         },
+        getById: function (id) {
+          let escalaEncontrada = null
+          this.get().forEach(function (escala) {
+            if (escala.id === id) {
+              escalaEncontrada = escala
+              return escalaEncontrada
+            }
+          })
+
+          return escalaEncontrada
+        },
         add: function (escala) {
+          escala.id = Math.floor(Math.random() * (999999999 - 1 + 1)) + 1
           let escalas = this.get()
           escalas.push(escala)
+          LocalStorage.set('escalas', escalas)
+        },
+        update: function (escalaUpdate) {
+          let escalas = this.get()
+          escalas.forEach(function (escala, index) {
+            if (escala.id === escalaUpdate.id) {
+              escalas[index] = escalaUpdate
+              LocalStorage.set('escalas', escalas)
+              return escala
+            }
+          })
+        },
+        delete: function (escala) {
+          let escalas = this.get()
+          escalas.splice(escalas.indexOf(escala), 1)
           LocalStorage.set('escalas', escalas)
         }
       },
@@ -135,19 +170,29 @@ export default {
     submit () {
       this.$v.form.$touch()
       if (!this.$v.form.$error) {
-        this.incluirEscala(this.form)
+        if (this.form.id) {
+          this.atualizarEscala(this.form)
+        }
+        else {
+          this.incluirEscala(this.form)
+        }
 
-        this.form.nome = ''
-        this.form.folga = ''
-        this.form.preta = ''
-        this.form.vermelha = ''
+        this.limparForm()
         this.$refs.escalaModal.close()
-
         this.events = this.recuperarEventos()
       }
     },
+    excluirEscala () {
+      this.escalas.delete(this.form)
+      this.limparForm()
+      this.$refs.escalaModal.close()
+      this.events = this.recuperarEventos()
+    },
     incluirEscala (escala) {
       this.escalas.add(escala)
+    },
+    atualizarEscala (escala) {
+      this.escalas.update(escala)
     },
     calcularEscalas () {
       let calcularEscala = this.calcularEscala
@@ -162,7 +207,7 @@ export default {
           while (moment().add(1, 'years').isAfter(escalaCalculada.preta)) {
             let datasEscala = calcularEscala(escalaCalculada)
             escalaCalculada = {
-              id: indice,
+              id: escala.id,
               nome: escala.nome,
               folga: escala.folga,
               preta: datasEscala.preta,
@@ -220,12 +265,14 @@ export default {
       let eventos = []
       this.calcularEscalas().forEach(function (escala) {
         eventos.push({
+          escala_id: escala.id,
           title: escala.nome,
           startDate: escala.preta,
           classes: 'preta'
         })
 
         eventos.push({
+          escala_id: escala.id,
           title: escala.nome,
           startDate: escala.vermelha,
           classes: 'vermelha'
@@ -234,8 +281,22 @@ export default {
 
       return eventos
     },
+    adicionarEscala () {
+      this.limparForm()
+      this.$refs.escalaModal.open()
+    },
     alterarEscala (event) {
-      console.log(event)
+      this.form = this.escalas.getById(event.escala_id)
+      this.$refs.escalaModal.open()
+    },
+    limparForm () {
+      this.form = {
+        id: null,
+        nome: null,
+        folga: null,
+        preta: null,
+        vermelha: null
+      }
     }
   },
   mounted () {
@@ -258,11 +319,10 @@ export default {
 
 #app
   width: 95vw
-  min-width: 30em
-  max-width: 100em
-  margin-left: auto
-  margin-right: auto
+  margin: auto
   display: flex
-  max-height: 100vh
   flex-direction: column
+
+.margin-top
+  margin-top: 0.5em
 </style>
