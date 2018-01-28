@@ -126,22 +126,26 @@ export default {
       let escalas = this.escalas.get()
       let escalasCalculadas = []
 
-      for (let i = 0; i <= 0; i++) {
-        escalas.map(function (escala, indice) {
-          if (escala.nome) {
-            let datasEscala = calcularEscala(escala)
-            escalasCalculadas.push({
+      escalas.map(function (escala, indice) {
+        if (escala.nome) {
+          let escalaCalculada = escala
+          escalasCalculadas.push(escalaCalculada)
+
+          while (moment().add(1, 'years').isAfter(escalaCalculada.preta)) {
+            console.log(escalaCalculada.preta, moment().add(1, 'years').toDate())
+            let datasEscala = calcularEscala(escalaCalculada)
+            escalaCalculada = {
               id: indice,
               nome: escala.nome,
               folga: escala.folga,
               preta: datasEscala.preta,
               vermelha: datasEscala.vermelha
-            })
-          }
-        })
+            }
 
-        escalas = escalasCalculadas
-      }
+            escalasCalculadas.push(escalaCalculada)
+          }
+        }
+      })
 
       return escalasCalculadas
     },
