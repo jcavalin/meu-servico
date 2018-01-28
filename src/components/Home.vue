@@ -6,6 +6,7 @@
       <div id="app">
           <calendar-view
                   :show-date="showDate"
+                  @click-event="alterarEscala"
                   @setShowDate="setShowDate"
                   :events="events"
                   class=""
@@ -227,6 +228,9 @@ export default {
       })
 
       return eventos
+    },
+    alterarEscala (event) {
+      console.log(event)
     }
   },
   mounted () {
@@ -246,4 +250,14 @@ export default {
 .vermelha
     background-color: #D91E18 !important
     color: #FFFFFF
+
+#app
+  width: 90vw
+  min-width: 30em
+  max-width: 100em
+  margin-left: auto
+  margin-right: auto
+  display: flex
+  max-height: 100vh
+  flex-direction: column
 </style>

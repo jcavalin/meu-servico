@@ -3,7 +3,8 @@
   <div id="q-app">
     <header></header>
     <main>
-      <!--<img src="~assets/quasar-logo-full.svg" alt="Quasar PWA">-->
+      <img src="/statics/icons/icon-192x192.png" class="logo" alt="Meu serviço">
+      <h4>Meu serviço</h4>
       <router-view></router-view>
     </main>
   </div>
@@ -27,4 +28,7 @@ header
   margin 0
   height 10px
   background-color $primary
+
+.logo
+  width: 10vw
 </style>
