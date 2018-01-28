@@ -1,9 +1,7 @@
 <template>
   <div class="home">
-      <q-btn round color="primary" @click="$refs.escalaModal.open()">
-          <q-icon name="add" />
-      </q-btn>
       <div id="app">
+          <h4>Serviços</h4>
           <calendar-view
                   :show-date="showDate"
                   @click-event="alterarEscala"
@@ -45,11 +43,17 @@
               </div>
           </q-modal-layout>
       </q-modal>
+
+      <q-fixed-position corner="bottom-right" :offset="[18, 18]">
+          <q-btn round color="primary" @click="$refs.escalaModal.open()" title="Adicionar escala">
+              <q-icon name="add" />
+          </q-btn>
+      </q-fixed-position>
   </div>
 </template>
 
 <script>
-import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, LocalStorage } from 'quasar'
+import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, QFab, LocalStorage } from 'quasar'
 import { required } from 'vuelidate/lib/validators'
 import moment from 'moment'
 import CalendarView from 'vue-simple-calendar'
@@ -113,7 +117,8 @@ export default {
     QModalLayout,
     QToolbar,
     QInput,
-    QDatetime
+    QDatetime,
+    QFab
   },
   validations: {
     form: {
@@ -252,7 +257,7 @@ export default {
     color: #FFFFFF
 
 #app
-  width: 90vw
+  width: 95vw
   min-width: 30em
   max-width: 100em
   margin-left: auto
