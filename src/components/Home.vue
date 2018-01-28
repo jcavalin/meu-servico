@@ -44,8 +44,15 @@
                       <span v-if="form.id">Alterar escala</span>
                       <span v-else>Incluir escala</span>
                   </q-btn>
-                  <q-btn icon="delete_forever" color="negative" v-if="form.id" @click="excluirEscala" class="full-width margin-top">
+                  <q-btn icon="delete_forever" color="negative" v-if="form.id" class="full-width margin-top">
                       <span >Excluir escala</span>
+                      <q-popover ref="popover">
+                          <q-list separator link>
+                           <q-item @click="excluirEscala">
+                               Sim, excluir esta escala!
+                           </q-item>
+                          </q-list>
+                      </q-popover>
                   </q-btn>
               </div>
           </q-modal-layout>
@@ -60,7 +67,7 @@
 </template>
 
 <script>
-import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, QFab, LocalStorage } from 'quasar'
+import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, QFab, QPopover, QList, QItem, LocalStorage } from 'quasar'
 import { required } from 'vuelidate/lib/validators'
 import moment from 'moment'
 import CalendarView from 'vue-simple-calendar'
@@ -153,7 +160,10 @@ export default {
     QToolbar,
     QInput,
     QDatetime,
-    QFab
+    QFab,
+    QPopover,
+    QList,
+    QItem
   },
   validations: {
     form: {
