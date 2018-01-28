@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="home">
       <q-btn round color="primary" @click="$refs.escalaModal.open()">
           <q-icon name="add" />
       </q-btn>
@@ -56,7 +56,7 @@ require('vue-simple-calendar/dist/static/css/default.css')
 require('vue-simple-calendar/dist/static/css/holidays-us.css')
 
 export default {
-  name: 'hello',
+  name: 'home',
   data: function () {
     return {
       showDate: new Date(),
