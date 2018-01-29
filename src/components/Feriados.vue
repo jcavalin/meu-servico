@@ -60,14 +60,11 @@ import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QD
 import { required } from 'vuelidate/lib/validators'
 import { Feriados } from './model/Feriados'
 import moment from 'moment'
-require('vue-simple-calendar/dist/static/css/default.css')
-require('vue-simple-calendar/dist/static/css/holidays-us.css')
 
 export default {
   name: 'feriados',
   data: function () {
     return {
-      showDate: new Date(),
       form: {
         data: null,
         descricao: null

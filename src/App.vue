@@ -21,6 +21,10 @@
           <q-item-side icon="date_range" />
           <q-item-main label="Feriados" sublabel="Contagem para vermelha" />
         </q-side-link>
+        <q-side-link item to="/exportar-importar/">
+          <q-item-side icon="import_export" />
+          <q-item-main label="Exportar/Importar" sublabel="Transferência de dados" />
+        </q-side-link>
       </q-list>
     </div>
     <!-- sub-routes get injected here: -->
