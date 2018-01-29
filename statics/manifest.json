@@ -3,17 +3,17 @@
   "short_name": "Meu serviço",
   "icons": [
     {
-      "src": "/statics/icons/icon-192x192.png",
+      "src": "https://jcavalin.github.io/meu-servico/statics/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/statics/icons/icon-512x512.png",
+      "src": "https://jcavalin.github.io/meu-servico/statics/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ],
-  "start_url": "/meu-servico/index.html",
+  "start_url": "https://jcavalin.github.io/meu-servico/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#027be3"
