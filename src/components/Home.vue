@@ -1,7 +1,7 @@
 <template>
   <div class="home">
       <div id="app">
-          <h4>Serviços</h4>
+          <h5>Serviços</h5>
           <calendar-view
                   :show-date="showDate"
                   @click-event="alterarEscala"
@@ -335,4 +335,7 @@ export default {
 
 .margin-top
   margin-top: 0.5em
+
+.nextYear, .previousYear
+    display: none
 </style>
