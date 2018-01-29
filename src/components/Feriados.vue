@@ -2,32 +2,23 @@
   <div class="feriados">
       <div id="app">
           <h5>Feriados</h5>
-          <table class="q-table horizontal-separator striped-odd">
-              <thead>
-              <tr>
-                  <th class="text-center">Data</th>
-                  <th class="text-center">Descrição</th>
-                  <th class="text-center">Excluir</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="feriado in lista">
-                  <td class="text-center">{{ feriado.data | formatar }}</td>
-                  <td class="text">{{ feriado.descricao }}</td>
-                  <td class="text-center">
-                      <q-btn round icon="delete_forever" color="negative">
-                          <q-popover ref="popover">
-                              <q-list separator link>
-                                  <q-item @click="excluirFeriado({data: feriado.data, descricao: feriado.descricao})">
-                                      Sim, excluir este feriado!
-                                  </q-item>
-                              </q-list>
-                          </q-popover>
-                      </q-btn>
-                  </td>
-              </tr>
-              </tbody>
-          </table>
+          <q-data-table
+                  :data="lista"
+                  :config="config"
+                  :columns="columns"
+          >
+              <template slot="col-excluir" slot-scope="feriado">
+                  <q-btn round icon="delete_forever" color="negative">
+                      <q-popover ref="popover">
+                          <q-list separator link>
+                              <q-item @click="excluirFeriado({data: feriado.data, descricao: feriado.descricao})">
+                                  Sim, excluir este feriado!
+                              </q-item>
+                          </q-list>
+                      </q-popover>
+                  </q-btn>
+              </template>
+          </q-data-table>
       </div>
 
       <q-modal ref="feriadoModal" :content-css="{minWidth: '50vw', minHeight: '55vh'}">
@@ -65,7 +56,7 @@
 </template>
 
 <script>
-import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, QFab, QPopover, QList, QItem } from 'quasar'
+import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, QFab, QPopover, QList, QItem, QDataTable } from 'quasar'
 import { required } from 'vuelidate/lib/validators'
 import { Feriados } from './model/Feriados'
 import moment from 'moment'
@@ -82,7 +73,57 @@ export default {
         descricao: null
       },
       lista: [],
-      feriados: Feriados
+      feriados: Feriados,
+      config: {
+        responsive: true,
+        pagination: {
+          rowsPerPage: 10,
+          options: [5, 10, 15, 30, 50, 500]
+        },
+        messages: {
+          noData: 'Nenhum feriado incluído.',
+          noDataAfterFiltering: 'Nenhum feriado encontrado.'
+        },
+        // (optional) Override default labels. Useful for I18n.
+        labels: {
+          allCols: 'Todas as colunas',
+          columns: 'Colunas',
+          rows: 'Linhas',
+          selected: {
+            singular: 'item selecionado.',
+            plural: 'item selecionado.'
+          },
+          clear: 'limpar',
+          search: 'Pesquisar',
+          all: 'Todas'
+        }
+      },
+      columns: [
+        {
+          label: 'Data',
+          field: 'data',
+          width: '20vw',
+          filter: true,
+          type: 'date',
+          format (value, row) {
+            return moment(value).format('DD/MM/YYYY')
+          }
+        },
+        {
+          label: 'Descrição',
+          field: 'descricao',
+          filter: true,
+          type: 'string'
+        },
+        {
+          label: 'Excluir',
+          field: 'excluir',
+          filter: false,
+          width: '15vw',
+          classes: 'text-center',
+          type: 'string'
+        }
+      ]
     }
   },
   components: {
@@ -97,7 +138,8 @@ export default {
     QFab,
     QPopover,
     QList,
-    QItem
+    QItem,
+    QDataTable
   },
   validations: {
     form: {
@@ -149,5 +191,8 @@ export default {
 <style lang="stylus">
 @import '~variables'
 .q-table
-    width: 95vw
+  width: 95vw
+
+.q-data-table
+  margin-bottom: 25vw
 </style>

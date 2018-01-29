@@ -7,7 +7,7 @@
       </q-btn>
       <q-toolbar-title>
         Meu serviço
-        <span slot="subtitle">0.1.1</span>
+        <span slot="subtitle">v0.1.1</span>
       </q-toolbar-title>
     </q-toolbar>
     <!-- Left Side Panel -->
@@ -59,7 +59,6 @@ export default {
 
 #app
   width: 95vw
-  min-height: 70vw
   margin: auto
   display: flex
   flex-direction: column

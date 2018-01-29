@@ -264,16 +264,19 @@ export default {
 @import '~variables'
 
 .preta
-    background-color: #2F353B !important
-    color: #FFFFFF
+  background-color: #2F353B !important
+  color: #FFFFFF
 
 .vermelha
-    background-color: #D91E18 !important
-    color: #FFFFFF
+  background-color: #D91E18 !important
+  color: #FFFFFF
 
 .margin-top
   margin-top: 0.5em
 
 .nextYear, .previousYear
-    display: none
+  display: none
+
+.calendar-view
+  margin-bottom: 25vw
 </style>
