@@ -59,14 +59,15 @@
 </template>
 
 <script>
-import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, QFab, QPopover, QList, QItem, LocalStorage } from 'quasar'
+import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, QFab, QPopover, QList, QItem } from 'quasar'
 import { required } from 'vuelidate/lib/validators'
+import { Feriados } from './model/Feriados'
 import moment from 'moment'
 require('vue-simple-calendar/dist/static/css/default.css')
 require('vue-simple-calendar/dist/static/css/holidays-us.css')
 
 export default {
-  name: 'home',
+  name: 'feriados',
   data: function () {
     return {
       showDate: new Date(),
@@ -74,23 +75,7 @@ export default {
         feriado: null
       },
       lista: [],
-      feriados: {
-        get: function () {
-          let feriados = LocalStorage.get.item('feriados')
-          feriados = feriados || []
-          return feriados
-        },
-        add: function (feriado) {
-          let feriados = this.get()
-          feriados.push(moment(feriado).format('YYYY-MM-DD'))
-          LocalStorage.set('feriados', feriados)
-        },
-        delete: function (feriado) {
-          let feriados = this.get()
-          feriados.splice(feriados.indexOf(feriado), 1)
-          LocalStorage.set('feriados', feriados)
-        }
-      }
+      feriados: Feriados
     }
   },
   components: {

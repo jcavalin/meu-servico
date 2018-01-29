@@ -59,7 +59,11 @@ export default {
 
 #app
   width: 95vw
+  min-height: 70vw
   margin: auto
   display: flex
   flex-direction: column
+
+.z-fixed
+  z-index: 10
 </style>

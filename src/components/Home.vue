@@ -67,8 +67,10 @@
 </template>
 
 <script>
-import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, QFab, QPopover, QList, QItem, LocalStorage } from 'quasar'
+import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, QFab, QPopover, QList, QItem } from 'quasar'
 import { required } from 'vuelidate/lib/validators'
+import { Feriados } from './model/Feriados'
+import { Escalas } from './model/Escalas'
 import moment from 'moment'
 import CalendarView from 'vue-simple-calendar'
 require('vue-simple-calendar/dist/static/css/default.css')
@@ -86,63 +88,8 @@ export default {
         preta: null,
         vermelha: null
       },
-      escalas: {
-        get: function () {
-          let escalas = LocalStorage.get.item('escalas')
-          escalas = escalas || []
-          return escalas
-        },
-        getById: function (id) {
-          let escalaEncontrada = null
-          this.get().forEach(function (escala) {
-            if (escala.id === id) {
-              escalaEncontrada = escala
-              return escalaEncontrada
-            }
-          })
-
-          return escalaEncontrada
-        },
-        add: function (escala) {
-          escala.id = Math.floor(Math.random() * (999999999 - 1 + 1)) + 1
-          let escalas = this.get()
-          escalas.push(escala)
-          LocalStorage.set('escalas', escalas)
-        },
-        update: function (escalaUpdate) {
-          let escalas = this.get()
-          escalas.forEach(function (escala, index) {
-            if (escala.id === escalaUpdate.id) {
-              escalas[index] = escalaUpdate
-              LocalStorage.set('escalas', escalas)
-              return escala
-            }
-          })
-        },
-        delete: function (escala) {
-          let escalas = this.get()
-          escalas.splice(escalas.indexOf(escala), 1)
-          LocalStorage.set('escalas', escalas)
-        }
-      },
-      feriados: {
-        get: function () {
-          let feriados = LocalStorage.get.item('feriados')
-          feriados = feriados || [
-            '2018-01-01', '2018-02-12', '2018-02-13', '2018-03-30', '2018-04-21', '2018-05-01', '2018-05-31',
-            '2018-09-07', '2018-10-12', '2018-11-02', '2018-11-15', '2018-12-25', '2019-01-01', '2019-03-04',
-            '2019-03-05', '2019-04-19', '2019-04-21', '2019-05-01', '2019-06-20', '2019-09-07', '2019-10-12',
-            '2019-11-02', '2019-11-15', '2019-12-25', '2020-01-01', '2020-02-24', '2020-02-25', '2020-04-10',
-            '2020-04-21', '2020-05-01', '2020-06-11', '2020-09-07', '2020-10-12', '2020-11-02', '2020-11-15',
-            '2020-12-25'
-          ]
-          LocalStorage.set('feriados', feriados)
-          return feriados
-        },
-        is: function (data) {
-          return this.get().includes(moment(data).format('YYYY-MM-DD'))
-        }
-      },
+      escalas: Escalas,
+      feriados: Feriados,
       events: []
     }
   },
