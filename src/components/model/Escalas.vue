@@ -41,10 +41,16 @@ export const Escalas = {
       }
     })
   },
-  delete: function (escala) {
+  delete: function (id) {
     let escalas = this.get()
-    escalas.splice(escalas.indexOf(escala), 1)
-    this.set(escalas)
+    let escalasObj = this
+    escalas.forEach(function (escala, index) {
+      if (escala.id === id) {
+        escalas.splice(index, 1)
+        escalasObj.set(escalas)
+        return escala
+      }
+    })
   }
 }
 </script>

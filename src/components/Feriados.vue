@@ -7,11 +7,11 @@
                   :config="config"
                   :columns="columns"
           >
-              <template slot="col-excluir" slot-scope="feriado">
+              <template slot="col-id" slot-scope="feriado">
                   <q-btn round icon="delete_forever" color="negative">
                       <q-popover ref="popover">
-                          <q-list separator link>
-                              <q-item @click="excluirFeriado({data: feriado.data, descricao: feriado.descricao})">
+                          <q-list separator popover>
+                              <q-item @click="excluirFeriado(feriado.data)">
                                   Sim, excluir este feriado!
                               </q-item>
                           </q-list>
@@ -72,7 +72,7 @@ export default {
       lista: [],
       feriados: Feriados,
       config: {
-        responsive: true,
+        responsive: false,
         pagination: {
           rowsPerPage: 10,
           options: [5, 10, 15, 30, 50, 500]
@@ -116,7 +116,7 @@ export default {
         },
         {
           label: 'Excluir',
-          field: 'excluir',
+          field: 'id',
           filter: false,
           width: '7em',
           type: 'string'
@@ -159,9 +159,10 @@ export default {
       this.feriados.add(feriado)
       this.lista = this.feriados.get()
     },
-    excluirFeriado (feriado) {
-      this.feriados.delete(feriado)
+    excluirFeriado (id) {
+      this.feriados.delete(id)
       this.lista = this.feriados.get()
+      this.$refs.popover.toggle()
     },
     adicionarFeriado () {
       this.limparForm()

@@ -136,7 +136,7 @@ export default {
       }
     },
     excluirEscala () {
-      this.escalas.delete(this.form)
+      this.escalas.delete(this.form.id)
       this.limparForm()
       this.$refs.escalaModal.close()
       this.events = this.recuperarEventos()

@@ -6,26 +6,36 @@ export default {
 
 }
 export const Feriados = {
-  key: 'feriados_dsc',
+  key: 'feriados_dsc_id',
   set: function (feriados) {
     LocalStorage.set(this.key, feriados)
   },
   get: function () {
     let feriados = LocalStorage.get.item(this.key)
-    feriados = feriados || this.default
+    feriados = feriados || this.default.map(function (feriado) {
+      feriado.id = Math.floor(Math.random() * (999999999 - 1 + 1)) + 1
+      return feriado
+    })
     this.set(feriados)
     return feriados
   },
   add: function (feriado) {
+    feriado.add = Math.floor(Math.random() * (999999999 - 1 + 1)) + 1
     feriado.data = moment(feriado.data).format('YYYY-MM-DD')
     let feriados = this.get()
     feriados.push(feriado)
     this.set(feriados)
   },
-  delete: function (feriado) {
+  delete: function (id) {
     let feriados = this.get()
-    feriados.splice(feriados.indexOf(feriado), 1)
-    this.set(feriados)
+    let feriadosObj = this
+    feriados.forEach(function (feriado, index) {
+      if (feriado.id === id) {
+        feriados.splice(index, 1)
+        feriadosObj.set(feriados)
+        return feriado
+      }
+    })
   },
   is: function (data) {
     return this.get().map(function (feriado) {
