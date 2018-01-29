@@ -1,5 +1,5 @@
 <template>
-  <div class="exportar-importar">
+  <div class="importar-exportar">
       <div id="app">
           <div class="row xl-gutter">
               <div class="col-md-6">
@@ -45,7 +45,7 @@ import { Feriados } from './model/Feriados'
 import { Escalas } from './model/Escalas'
 
 export default {
-  name: 'exportar-importar',
+  name: 'importar-exportar',
   data: function () {
     return {
       exp: '',

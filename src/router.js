@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 import Home from '@/Home.vue'
 import Servicos from '@/Servicos.vue'
 import Feriados from '@/Feriados.vue'
-import ExportarImportar from '@/ExportarImportar.vue'
+import ImportarExportar from '@/ImportarExportar.vue'
 
 Vue.use(VueRouter)
 
@@ -34,6 +34,6 @@ export default new VueRouter({
     { path: '/', component: Home },
     { path: '/servicos/', component: Servicos },
     { path: '/feriados/', component: Feriados },
-    { path: '/exportar-importar/', component: ExportarImportar }
+    { path: '/importar-exportar/', component: ImportarExportar }
   ]
 })
