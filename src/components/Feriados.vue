@@ -104,6 +104,7 @@ export default {
           field: 'data',
           width: '8em',
           filter: true,
+          sort: true,
           type: 'date',
           format (value, row) {
             return moment(value).format('DD/MM/YYYY')
@@ -113,6 +114,7 @@ export default {
           label: 'Descrição',
           field: 'descricao',
           filter: true,
+          sort: true,
           type: 'string'
         },
         {
@@ -182,6 +184,9 @@ export default {
   },
   mounted () {
     this.lista = this.feriados.get()
+    // Gambiarra para resolver a falta de sort default, remover na v0.15 do quasar
+    // Ref: https://github.com/quasarframework/quasar/issues/379
+    document.querySelectorAll('.q-data-table-head table thead th')[0].click()
   }
 }
 </script>
