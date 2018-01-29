@@ -278,5 +278,5 @@ export default {
   display: none
 
 .calendar-view
-  margin-bottom: 25vw
+  margin-bottom: 6em
 </style>

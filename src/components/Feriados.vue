@@ -102,7 +102,7 @@ export default {
         {
           label: 'Data',
           field: 'data',
-          width: '20vw',
+          width: '8em',
           filter: true,
           type: 'date',
           format (value, row) {
@@ -119,8 +119,7 @@ export default {
           label: 'Excluir',
           field: 'excluir',
           filter: false,
-          width: '15vw',
-          classes: 'text-center',
+          width: '7em',
           type: 'string'
         }
       ]
@@ -194,5 +193,5 @@ export default {
   width: 95vw
 
 .q-data-table
-  margin-bottom: 25vw
+  margin-bottom: 6em
 </style>
