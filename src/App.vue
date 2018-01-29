@@ -13,11 +13,11 @@
     <!-- Left Side Panel -->
     <div slot="left">
       <q-list no-border link inset-separator>
-        <q-side-link item to="/">
+        <q-side-link item to="/servicos/">
           <q-item-side icon="assignment_ind" />
           <q-item-main label="Serviços" sublabel="Calendário de escalas" />
         </q-side-link>
-        <q-side-link item to="/feriados">
+        <q-side-link item to="/feriados/">
           <q-item-side icon="date_range" />
           <q-item-main label="Feriados" sublabel="Contagem para vermelha" />
         </q-side-link>

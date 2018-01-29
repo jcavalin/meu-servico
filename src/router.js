@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import Home from '@/Home.vue'
+import Servicos from '@/Servicos.vue'
 import Feriados from '@/Feriados.vue'
 
 Vue.use(VueRouter)
@@ -30,6 +31,7 @@ export default new VueRouter({
 
   routes: [
     { path: '/', component: Home },
+    { path: '/servicos/', component: Servicos },
     { path: '/feriados/', component: Feriados }
   ]
 })
