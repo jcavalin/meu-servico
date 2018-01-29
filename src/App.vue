@@ -47,7 +47,9 @@ export default {
     QToolbarTitle
   },
   mounted () {
-    this.$refs.layout.toggleLeft()
+    if (this.$q.platform.is.desktop) {
+      this.$refs.layout.toggleLeft()
+    }
   }
 }
 </script>
