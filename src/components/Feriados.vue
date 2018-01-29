@@ -5,18 +5,20 @@
           <table class="q-table horizontal-separator striped-odd">
               <thead>
               <tr>
-                  <th class="text-center">Feriado</th>
-                  <th class="text-center">Ação</th>
+                  <th class="text-center">Data</th>
+                  <th class="text-center">Descrição</th>
+                  <th class="text-center">Excluir</th>
               </tr>
               </thead>
               <tbody>
               <tr v-for="feriado in lista">
-                  <td class="text-center">{{ feriado | formatar }}</td>
+                  <td class="text-center">{{ feriado.data | formatar }}</td>
+                  <td class="text">{{ feriado.descricao }}</td>
                   <td class="text-center">
                       <q-btn round icon="delete_forever" color="negative">
                           <q-popover ref="popover">
                               <q-list separator link>
-                                  <q-item @click="excluirFeriado(feriado)">
+                                  <q-item @click="excluirFeriado({data: feriado.data, descricao: feriado.descricao})">
                                       Sim, excluir este feriado!
                                   </q-item>
                               </q-list>
@@ -39,10 +41,14 @@
                   </div>
               </q-toolbar>
               <div class="layout-padding">
-                  <q-datetime v-model="form.feriado" type="date" float-label="Data do feriado" format="DD/MM/YYYY"
-                              @blur="$v.form.feriado.$touch"
+                  <q-datetime v-model="form.data" type="date" float-label="Data do feriado" format="DD/MM/YYYY"
+                              @blur="$v.form.data.$touch"
                               @keyup.enter="submit"
-                              :error="$v.form.feriado.$error" />
+                              :error="$v.form.data.$error" />
+                  <q-input v-model="form.descricao" float-label="Descrição"
+                           @blur="$v.form.descricao.$touch"
+                           @keyup.enter="submit"
+                           :error="$v.form.descricao.$error" />
                   <q-btn icon="add" color="primary" @click="submit" class="full-width">
                       Incluir feriado
                   </q-btn>
@@ -72,7 +78,8 @@ export default {
     return {
       showDate: new Date(),
       form: {
-        feriado: null
+        data: null,
+        descricao: null
       },
       lista: [],
       feriados: Feriados
@@ -94,14 +101,15 @@ export default {
   },
   validations: {
     form: {
-      feriado: { required }
+      data: { required },
+      descricao: { required }
     }
   },
   methods: {
     submit () {
       this.$v.form.$touch()
       if (!this.$v.form.$error) {
-        this.incluirFeriado(this.form.feriado)
+        this.incluirFeriado(this.form)
 
         this.limparForm()
         this.$refs.feriadoModal.close()
@@ -121,7 +129,8 @@ export default {
     },
     limparForm () {
       this.form = {
-        feriado: null
+        data: null,
+        descricao: null
       }
     }
   },

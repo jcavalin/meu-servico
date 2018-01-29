@@ -6,31 +6,65 @@ export default {
 
 }
 export const Feriados = {
+  key: 'feriados_dsc',
   get: function () {
-    let feriados = LocalStorage.get.item('feriados')
+    let feriados = LocalStorage.get.item(this.key)
     feriados = feriados || [
-      '2018-01-01', '2018-02-12', '2018-02-13', '2018-03-30', '2018-04-21', '2018-05-01', '2018-05-31',
-      '2018-09-07', '2018-10-12', '2018-11-02', '2018-11-15', '2018-12-25', '2019-01-01', '2019-03-04',
-      '2019-03-05', '2019-04-19', '2019-04-21', '2019-05-01', '2019-06-20', '2019-09-07', '2019-10-12',
-      '2019-11-02', '2019-11-15', '2019-12-25', '2020-01-01', '2020-02-24', '2020-02-25', '2020-04-10',
-      '2020-04-21', '2020-05-01', '2020-06-11', '2020-09-07', '2020-10-12', '2020-11-02', '2020-11-15',
-      '2020-12-25'
+      {data: '2018-01-01', descricao: 'Confraternização Universal'},
+      {data: '2018-02-12', descricao: 'Carnaval'},
+      {data: '2018-02-13', descricao: 'Carnaval'},
+      {data: '2018-03-30', descricao: 'Paixão de Cristo'},
+      {data: '2018-04-21', descricao: 'Tiradentes'},
+      {data: '2018-05-01', descricao: 'Dia do Trabalho'},
+      {data: '2018-05-31', descricao: 'Corpus Christi'},
+      {data: '2018-09-07', descricao: 'Independência do Brasil'},
+      {data: '2018-10-12', descricao: 'Nossa Sr.a Aparecida - Padroeira do Brasil'},
+      {data: '2018-11-02', descricao: 'Finados'},
+      {data: '2018-11-15', descricao: 'Proclamação da República'},
+      {data: '2018-12-25', descricao: 'Natal'},
+      {data: '2019-01-01', descricao: 'Confraternização Universal'},
+      {data: '2019-03-04', descricao: 'Carnaval'},
+      {data: '2019-03-05', descricao: 'Carnaval'},
+      {data: '2019-04-19', descricao: 'Paixão de Cristo'},
+      {data: '2019-04-21', descricao: 'Tiradentes'},
+      {data: '2019-05-01', descricao: 'Dia do Trabalho'},
+      {data: '2019-06-20', descricao: 'Corpus Christi'},
+      {data: '2019-09-07', descricao: 'Independência do Brasil'},
+      {data: '2019-10-12', descricao: 'Nossa Sr.a Aparecida - Padroeira do Brasil'},
+      {data: '2019-11-02', descricao: 'Finados'},
+      {data: '2019-11-15', descricao: 'Proclamação da República'},
+      {data: '2019-12-25', descricao: 'Natal'},
+      {data: '2020-01-01', descricao: 'Confraternização Universal'},
+      {data: '2020-02-24', descricao: 'Carnaval'},
+      {data: '2020-02-25', descricao: 'Carnaval'},
+      {data: '2020-04-10', descricao: 'Paixão de Cristo'},
+      {data: '2020-04-21', descricao: 'Tiradentes'},
+      {data: '2020-05-01', descricao: 'Dia do Trabalho'},
+      {data: '2020-06-11', descricao: 'Corpus Christi'},
+      {data: '2020-09-07', descricao: 'Independência do Brasil'},
+      {data: '2020-10-12', descricao: 'Nossa Sr.a Aparecida - Padroeira do Brasil'},
+      {data: '2020-11-02', descricao: 'Finados'},
+      {data: '2020-11-15', descricao: 'Proclamação da República'},
+      {data: '2020-12-25', descricao: 'Natal'}
     ]
-    LocalStorage.set('feriados', feriados)
+    LocalStorage.set(this.key, feriados)
     return feriados
   },
   add: function (feriado) {
+    feriado.data = moment(feriado.data).format('YYYY-MM-DD')
     let feriados = this.get()
-    feriados.push(moment(feriado).format('YYYY-MM-DD'))
-    LocalStorage.set('feriados', feriados)
+    feriados.push(feriado)
+    LocalStorage.set(this.key, feriados)
   },
   delete: function (feriado) {
     let feriados = this.get()
     feriados.splice(feriados.indexOf(feriado), 1)
-    LocalStorage.set('feriados', feriados)
+    LocalStorage.set(this.key, feriados)
   },
   is: function (data) {
-    return this.get().includes(moment(data).format('YYYY-MM-DD'))
+    return this.get().map(function (feriado) {
+      return feriado.data
+    }).includes(moment(data).format('YYYY-MM-DD'))
   }
 }
 </script>
