@@ -1,11 +1,10 @@
 <template>
   <div class="importar-exportar">
       <div id="app">
-          <div class="row xl-gutter">
+          <div class="row md-gutter">
               <div class="col-md-6">
                   <h5>
                       Importar
-                      <small class="aviso-importacao">Todas as suas informações serão sobreescritas</small>
                   </h5>
                   <q-input
                       v-model="form.imp"
@@ -13,13 +12,15 @@
                       :error="$v.form.imp.$error"
                       float-label="Cole o código no campo abaixo"
                       type="textarea"
-                      :min-rows="10"
+                      :min-rows="3"
                       :max-height="100"
                   />
-
                   <q-btn icon="file_download" color="primary" @click="submit" class="full-width">
                       Importar informações
                   </q-btn>
+                  <div class="aviso-importacao">
+                      Atenção! Todas as suas informações serão substituídas.
+                  </div>
               </div>
 
               <div class="col-md-6">
@@ -119,6 +120,8 @@ export default {
 <style lang="stylus">
 @import '~variables'
 .aviso-importacao
-    font-size: 50%
     color: red
+    font-size: 80%
+    padding: 0.5em 0
+    text-align: center
 </style>
