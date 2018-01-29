@@ -7,7 +7,7 @@
       </q-btn>
       <q-toolbar-title>
         Meu serviço
-        <span slot="subtitle">0.0.2</span>
+        <span slot="subtitle">0.1.0</span>
       </q-toolbar-title>
     </q-toolbar>
     <!-- Left Side Panel -->
@@ -56,4 +56,10 @@ export default {
 
 <style lang="stylus">
 @import '~variables'
+
+#app
+  width: 95vw
+  margin: auto
+  display: flex
+  flex-direction: column
 </style>

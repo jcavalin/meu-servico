@@ -136,12 +136,8 @@ export default {
             '2020-04-21', '2020-05-01', '2020-06-11', '2020-09-07', '2020-10-12', '2020-11-02', '2020-11-15',
             '2020-12-25'
           ]
-          return feriados
-        },
-        add: function (feriado) {
-          let feriados = this.get()
-          feriados.push(feriado)
           LocalStorage.set('feriados', feriados)
+          return feriados
         },
         is: function (data) {
           return this.get().includes(moment(data).format('YYYY-MM-DD'))
@@ -311,6 +307,7 @@ export default {
   },
   mounted () {
     this.events = this.recuperarEventos()
+    this.feriados.get()
   }
 }
 </script>
@@ -326,12 +323,6 @@ export default {
 .vermelha
     background-color: #D91E18 !important
     color: #FFFFFF
-
-#app
-  width: 95vw
-  margin: auto
-  display: flex
-  flex-direction: column
 
 .margin-top
   margin-top: 0.5em
