@@ -4,7 +4,7 @@
           <h5>Serviços</h5>
           <calendar-view
                   :show-date="showDate"
-                  @click-event="alterarEscala"
+                  @click-event="abrirModalServico"
                   @setShowDate="setShowDate"
                   :events="events"
                   class=""
@@ -18,33 +18,33 @@
                       <q-icon name="keyboard_arrow_left" />
                   </q-btn>
                   <div class="q-toolbar-title">
-                      <span v-if="form.id">Atualizar escala</span>
+                      <span v-if="formEscala.id">Atualizar escala</span>
                       <span v-else>Adicionar escala</span>
                   </div>
               </q-toolbar>
               <div class="layout-padding">
-                  <q-input v-model="form.nome" float-label="Nome da pessoa"
-                       @blur="$v.form.nome.$touch"
-                       @keyup.enter="submit"
-                       :error="$v.form.nome.$error" />
-                  <q-input v-model="form.folga" type="number" float-label="Quantidade de dias de folga"
-                           @blur="$v.form.folga.$touch"
-                           @keyup.enter="submit"
-                           :error="$v.form.folga.$error"/>
-                  <q-datetime v-model="form.preta" type="date" float-label="Data da preta" format="DD/MM/YYYY"
-                              @blur="$v.form.preta.$touch"
-                              @keyup.enter="submit"
-                              :error="$v.form.preta.$error" />
-                  <q-datetime v-model="form.vermelha" type="date" float-label="Data da vermelha" format="DD/MM/YYYY"
-                              @blur="$v.form.vermelha.$touch"
-                              @keyup.enter="submit"
-                              :error="$v.form.vermelha.$error" />
+                  <q-input v-model="formEscala.nome" float-label="Nome da pessoa"
+                       @blur="$v.formEscala.nome.$touch"
+                       @keyup.enter="submitEscala"
+                       :error="$v.formEscala.nome.$error" />
+                  <q-input v-model="formEscala.folga" type="number" float-label="Quantidade de dias de folga"
+                           @blur="$v.formEscala.folga.$touch"
+                           @keyup.enter="submitEscala"
+                           :error="$v.formEscala.folga.$error"/>
+                  <q-datetime v-model="formEscala.preta" type="date" float-label="Data da preta" format="DD/MM/YYYY"
+                              @blur="$v.formEscala.preta.$touch"
+                              @keyup.enter="submitEscala"
+                              :error="$v.formEscala.preta.$error" />
+                  <q-datetime v-model="formEscala.vermelha" type="date" float-label="Data da vermelha" format="DD/MM/YYYY"
+                              @blur="$v.formEscala.vermelha.$touch"
+                              @keyup.enter="submitEscala"
+                              :error="$v.formEscala.vermelha.$error" />
 
-                  <q-btn icon="add" color="primary" @click="submit" class="full-width">
-                      <span v-if="form.id">Alterar escala</span>
+                  <q-btn icon="add" color="primary" @click="submitEscala" class="full-width">
+                      <span v-if="formEscala.id">Alterar escala</span>
                       <span v-else>Incluir escala</span>
                   </q-btn>
-                  <q-btn icon="delete_forever" color="negative" v-if="form.id" class="full-width margin-top">
+                  <q-btn icon="delete_forever" color="negative" v-if="formEscala.id" class="full-width margin-top">
                       <span >Excluir escala</span>
                       <q-popover ref="popover">
                           <q-list separator link>
@@ -57,6 +57,42 @@
               </div>
           </q-modal-layout>
       </q-modal>
+
+      <q-modal ref="servicoModal" :content-css="{minWidth: '50vw', minHeight: '55vh'}">
+          <q-modal-layout>
+              <q-toolbar slot="header">
+                  <q-btn flat @click="$refs.servicoModal.close()">
+                      <q-icon name="keyboard_arrow_left" />
+                  </q-btn>
+                  <div class="q-toolbar-title">
+                      <span>Atualizar serviço</span>
+                  </div>
+              </q-toolbar>
+              <div class="layout-padding">
+                  <q-input v-model="formServico.title" float-label="Nome da pessoa"
+                       @blur="$v.formServico.title.$touch"
+                       @keyup.enter="submitServico"
+                       :error="$v.formServico.title.$error" />
+
+                  <q-btn icon="add" color="primary" @click="submitServico" class="full-width">
+                      <span>Alterar serviço</span>
+                  </q-btn>
+              </div>
+          </q-modal-layout>
+      </q-modal>
+
+      <q-fixed-position v-if="escalas.get().length > 0" corner="bottom-right" :offset="[18, 90]">
+          <q-btn round color="secondary" title="Atualizar serviços">
+              <q-icon name="update" />
+              <q-popover ref="popoverUpdateServico">
+                  <q-list separator link>
+                      <q-item @click="atualizarServicos">
+                          Sim, atualizar serviços!
+                      </q-item>
+                  </q-list>
+              </q-popover>
+          </q-btn>
+      </q-fixed-position>
 
       <q-fixed-position corner="bottom-right" :offset="[18, 18]">
           <q-btn round color="primary" @click="adicionarEscala" title="Adicionar escala">
@@ -71,7 +107,7 @@ import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QD
 import { required } from 'vuelidate/lib/validators'
 import { Feriados } from './model/Feriados'
 import { Escalas } from './model/Escalas'
-import moment from 'moment'
+import { Servicos } from './model/Servicos'
 import CalendarView from 'vue-simple-calendar'
 require('vue-simple-calendar/dist/static/css/default.css')
 require('vue-simple-calendar/dist/static/css/holidays-us.css')
@@ -81,15 +117,23 @@ export default {
   data: function () {
     return {
       showDate: new Date(),
-      form: {
+      formEscala: {
         id: null,
         nome: null,
         folga: null,
         preta: null,
         vermelha: null
       },
+      formServico: {
+        id: null,
+        escala_id: null,
+        title: null,
+        startDate: null,
+        classes: null
+      },
       escalas: Escalas,
       feriados: Feriados,
+      servicos: Servicos,
       events: []
     }
   },
@@ -109,130 +153,50 @@ export default {
     QItem
   },
   validations: {
-    form: {
+    formEscala: {
       nome: { required },
       folga: { required },
       preta: { required },
       vermelha: { required }
+    },
+    formServico: {
+      title: { required }
     }
   },
   methods: {
     setShowDate (d) {
       this.showDate = d
     },
-    submit () {
-      this.$v.form.$touch()
-      if (!this.$v.form.$error) {
-        if (this.form.id) {
-          this.atualizarEscala(this.form)
+    submitEscala () {
+      this.$v.formEscala.$touch()
+      if (!this.$v.formEscala.$error) {
+        if (this.formEscala.id) {
+          this.escalas.update(this.formEscala)
         }
         else {
-          this.incluirEscala(this.form)
+          this.escalas.add(this.formEscala)
         }
 
         this.limparForm()
         this.$refs.escalaModal.close()
-        this.events = this.recuperarEventos()
+        this.events = this.servicos.get()
+      }
+    },
+    submitServico () {
+      this.$v.formServico.$touch()
+      if (!this.$v.formServico.$error) {
+        this.servicos.update(this.formServico)
+
+        this.limparFormServico()
+        this.$refs.servicoModal.close()
+        this.events = this.servicos.get()
       }
     },
     excluirEscala () {
       this.escalas.delete(this.form.id)
       this.limparForm()
       this.$refs.escalaModal.close()
-      this.events = this.recuperarEventos()
-    },
-    incluirEscala (escala) {
-      this.escalas.add(escala)
-    },
-    atualizarEscala (escala) {
-      this.escalas.update(escala)
-    },
-    calcularEscalas () {
-      let calcularEscala = this.calcularEscala
-      let escalas = this.escalas.get()
-      let escalasCalculadas = []
-
-      escalas.map(function (escala, indice) {
-        if (escala.nome) {
-          let escalaCalculada = escala
-          escalasCalculadas.push(escalaCalculada)
-
-          while (moment().add(1, 'years').isAfter(escalaCalculada.preta)) {
-            let datasEscala = calcularEscala(escalaCalculada)
-            escalaCalculada = {
-              id: escala.id,
-              nome: escala.nome,
-              folga: escala.folga,
-              preta: datasEscala.preta,
-              vermelha: datasEscala.vermelha
-            }
-
-            escalasCalculadas.push(escalaCalculada)
-          }
-        }
-      })
-
-      return escalasCalculadas
-    },
-    calcularEscala (escala) {
-      let feriados = this.feriados
-      let calcularPreta = function (escala) {
-        let qtdDias = 1
-        let dataAtual = moment(escala.preta).add(1, 'days')
-        let diaSemana = dataAtual.weekday()
-
-        while (qtdDias <= escala.folga || diaSemana === 0 || diaSemana === 6 || feriados.is(dataAtual)) {
-          if (diaSemana !== 0 && diaSemana !== 6 && !feriados.is(dataAtual)) {
-            qtdDias++
-          }
-
-          dataAtual = moment(dataAtual).add(1, 'days')
-          diaSemana = dataAtual.weekday()
-        }
-
-        return dataAtual.toDate()
-      }
-
-      let calcularVermelha = function (escala) {
-        let qtdDias = 1
-        let dataAtual = moment(escala.vermelha).add(1, 'days')
-        let diaSemana = dataAtual.weekday()
-        while (qtdDias <= escala.folga || (diaSemana !== 0 && diaSemana !== 6 && !feriados.is(dataAtual))) {
-          if (diaSemana === 0 || diaSemana === 6 || feriados.is(dataAtual)) {
-            qtdDias++
-          }
-
-          dataAtual = moment(dataAtual).add(1, 'days')
-          diaSemana = dataAtual.weekday()
-        }
-
-        return dataAtual.toDate()
-      }
-
-      return {
-        preta: calcularPreta(escala),
-        vermelha: calcularVermelha(escala)
-      }
-    },
-    recuperarEventos () {
-      let eventos = []
-      this.calcularEscalas().forEach(function (escala) {
-        eventos.push({
-          escala_id: escala.id,
-          title: escala.nome,
-          startDate: escala.preta,
-          classes: 'preta'
-        })
-
-        eventos.push({
-          escala_id: escala.id,
-          title: escala.nome,
-          startDate: escala.vermelha,
-          classes: 'vermelha'
-        })
-      })
-
-      return eventos
+      this.events = this.servicos.get()
     },
     adicionarEscala () {
       this.limparForm()
@@ -242,6 +206,15 @@ export default {
       this.form = this.escalas.getById(event.escala_id)
       this.$refs.escalaModal.open()
     },
+    abrirModalServico (event) {
+      this.formServico = Object.assign({}, event)
+      this.$refs.servicoModal.open()
+    },
+    atualizarServicos () {
+      this.servicos.calcularServicos()
+      this.events = this.servicos.get()
+      this.$refs.popoverUpdateServico.toggle()
+    },
     limparForm () {
       this.form = {
         id: null,
@@ -250,10 +223,19 @@ export default {
         preta: null,
         vermelha: null
       }
+    },
+    limparFormServico () {
+      this.formServico = {
+        id: null,
+        escala_id: null,
+        title: null,
+        startDate: null,
+        classes: null
+      }
     }
   },
   mounted () {
-    this.events = this.recuperarEventos()
+    this.events = this.servicos.get()
     this.feriados.get()
   }
 }

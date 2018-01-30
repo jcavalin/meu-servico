@@ -69,4 +69,6 @@ export default {
 
 .z-fixed
   z-index: 10
+.layout-padding
+  padding: 1rem 2rem
 </style>

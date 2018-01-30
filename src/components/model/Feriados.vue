@@ -1,26 +1,27 @@
 <script>
 import { LocalStorage } from 'quasar'
+import { Util } from './Util'
 import moment from 'moment'
 
 export default {
 
 }
 export const Feriados = {
-  key: 'feriados_dsc_id',
+  key: 'feriados_',
   set: function (feriados) {
     LocalStorage.set(this.key, feriados)
   },
   get: function () {
     let feriados = LocalStorage.get.item(this.key)
     feriados = feriados || this.default.map(function (feriado) {
-      feriado.id = Math.floor(Math.random() * (999999999 - 1 + 1)) + 1
+      feriado.id = Util.generateId()
       return feriado
     })
     this.set(feriados)
     return feriados
   },
   add: function (feriado) {
-    feriado.add = Math.floor(Math.random() * (999999999 - 1 + 1)) + 1
+    feriado.id = Util.generateId()
     feriado.data = moment(feriado.data).format('YYYY-MM-DD')
     let feriados = this.get()
     feriados.push(feriado)

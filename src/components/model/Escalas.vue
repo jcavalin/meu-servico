@@ -1,5 +1,6 @@
 <script>
 import { LocalStorage } from 'quasar'
+import { Util } from './Util'
 
 export default {
 
@@ -26,7 +27,7 @@ export const Escalas = {
     return escalaEncontrada
   },
   add: function (escala) {
-    escala.id = Math.floor(Math.random() * (999999999 - 1 + 1)) + 1
+    escala.id = Util.generateId()
     let escalas = this.get()
     escalas.push(escala)
     this.set(escalas)

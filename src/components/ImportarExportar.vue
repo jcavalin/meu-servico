@@ -44,6 +44,7 @@ import { QInput, QBtn, Toast } from 'quasar'
 import { required } from 'vuelidate/lib/validators'
 import { Feriados } from './model/Feriados'
 import { Escalas } from './model/Escalas'
+import { Servicos } from './model/Servicos'
 
 export default {
   name: 'importar-exportar',
@@ -71,16 +72,18 @@ export default {
     exportar () {
       return btoa(JSON.stringify({
         escalas: Escalas.get(),
-        feriados: Feriados.get()
+        feriados: Feriados.get(),
+        servicos: Servicos.get()
       }))
     },
     importar (exp) {
       try {
         let imp = JSON.parse(atob(exp.trim()))
         console.log(imp)
-        if (imp.escalas && imp.feriados) {
+        if (imp.escalas && imp.feriados && imp.servicos) {
           Escalas.set(imp.escalas)
           Feriados.set(imp.feriados)
+          Servicos.set(imp.servicos)
 
           return true
         }
