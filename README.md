@@ -1,3 +1,8 @@
+# Meu serviço
+Sistema de contagem de escalas
+
+Vue.js + Quasar
+
 # Quasar PWA App
 
 > A Quasar PWA project
