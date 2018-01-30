@@ -7,7 +7,7 @@
       </q-btn>
       <q-toolbar-title>
         Meu serviço
-        <span slot="subtitle">v0.1.5</span>
+        <span slot="subtitle">v0.1.6</span>
       </q-toolbar-title>
     </q-toolbar>
     <!-- Left Side Panel -->

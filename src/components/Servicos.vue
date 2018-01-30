@@ -5,6 +5,7 @@
           <calendar-view
                   :show-date="showDate"
                   @click-event="abrirModalServico"
+                  @click-date="abrirModalServicoDia"
                   @setShowDate="setShowDate"
                   :events="events"
                   class=""
@@ -96,6 +97,7 @@ import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QD
 import { required } from 'vuelidate/lib/validators'
 import { Feriados } from './model/Feriados'
 import { Servicos } from './model/Servicos'
+import { Util } from './model/Util'
 import CalendarView from 'vue-simple-calendar'
 require('vue-simple-calendar/dist/static/css/default.css')
 require('vue-simple-calendar/dist/static/css/holidays-us.css')
@@ -208,6 +210,13 @@ export default {
         this.formServico = Object.assign({}, servico)
         this.formServico.calcularProximos = false
       }
+      this.$refs.servicoModal.open()
+    },
+    abrirModalServicoDia (data) {
+      this.limparForm()
+      this.formServico.classes = Util.isWeekendOrHoliday(data) ? 'vermelha' : 'preta'
+      this.formServico.startDate = data
+
       this.$refs.servicoModal.open()
     },
     limparForm () {

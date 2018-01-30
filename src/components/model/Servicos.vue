@@ -1,6 +1,5 @@
 <script>
 import { LocalStorage } from 'quasar'
-import { Feriados } from './Feriados'
 import { Util } from './Util'
 import moment from 'moment'
 
@@ -111,15 +110,13 @@ export const Servicos = {
     let calcularPreta = function (servico) {
       let qtdDias = 1
       let dataAtual = moment(servico.startDate).add(1, 'days')
-      let diaSemana = dataAtual.weekday()
 
-      while (qtdDias <= servico.folga || diaSemana === 0 || diaSemana === 6 || Feriados.is(dataAtual)) {
-        if (diaSemana !== 0 && diaSemana !== 6 && !Feriados.is(dataAtual)) {
+      while (qtdDias <= servico.folga || Util.isWeekendOrHoliday(dataAtual)) {
+        if (!Util.isWeekendOrHoliday(dataAtual)) {
           qtdDias++
         }
 
         dataAtual = moment(dataAtual).add(1, 'days')
-        diaSemana = dataAtual.weekday()
       }
 
       return dataAtual.toDate()
@@ -128,14 +125,13 @@ export const Servicos = {
     let calcularVermelha = function (servico) {
       let qtdDias = 1
       let dataAtual = moment(servico.startDate).add(1, 'days')
-      let diaSemana = dataAtual.weekday()
-      while (qtdDias <= servico.folga || (diaSemana !== 0 && diaSemana !== 6 && !Feriados.is(dataAtual))) {
-        if (diaSemana === 0 || diaSemana === 6 || Feriados.is(dataAtual)) {
+
+      while (qtdDias <= servico.folga || !Util.isWeekendOrHoliday(dataAtual)) {
+        if (Util.isWeekendOrHoliday(dataAtual)) {
           qtdDias++
         }
 
         dataAtual = moment(dataAtual).add(1, 'days')
-        diaSemana = dataAtual.weekday()
       }
 
       return dataAtual.toDate()
