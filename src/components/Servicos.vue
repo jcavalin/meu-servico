@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, QFab, QPopover, QList, QItem, QSelect } from 'quasar'
+import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, QFab, QPopover, QList, QItem, QSelect, Loading } from 'quasar'
 import { required } from 'vuelidate/lib/validators'
 import { Feriados } from './model/Feriados'
 import { Servicos } from './model/Servicos'
@@ -118,7 +118,8 @@ export default {
     QPopover,
     QList,
     QItem,
-    QSelect
+    QSelect,
+    Loading
   },
   data: function () {
     return {
@@ -131,8 +132,6 @@ export default {
         classes: null,
         calcularProximos: false
       },
-      feriados: Feriados,
-      servicos: Servicos,
       events: [],
       tiposServico: [
         {
@@ -170,38 +169,54 @@ export default {
     },
     submitServico () {
       this.$v.formServico.$touch()
+      Loading.show()
+
+      let formServico = this.formServico
+      let objRef = this
+      let done = function () {
+        Loading.hide()
+        objRef.limparForm()
+        objRef.$refs.servicoModal.close()
+        objRef.events = Servicos.get()
+      }
 
       if (!this.$v.formServico.$error) {
-        if (this.formServico.id) {
-          this.servicos.update(this.formServico)
-          if (this.formServico.calcularProximos) {
-            this.servicos.atualizarProximosServicos(this.formServico)
+        if (formServico.id) {
+          Servicos.update(formServico)
+          if (formServico.calcularProximos) {
+            setTimeout(function () {
+              Servicos.atualizarProximosServicos(formServico)
+              done()
+            }, 515)
           }
         }
         else {
-          this.servicos.add(this.formServico)
-          if (this.formServico.calcularProximos) {
-            this.servicos.calcularProximosServicos(this.formServico)
+          Servicos.add(formServico)
+          if (formServico.calcularProximos) {
+            setTimeout(function () {
+              Servicos.calcularProximosServicos(formServico)
+              done()
+            }, 515)
           }
         }
 
-        this.limparForm()
-        this.$refs.servicoModal.close()
-        this.events = this.servicos.get()
+        if (!formServico.calcularProximos) {
+          done()
+        }
       }
     },
     excluirServico () {
-      this.servicos.delete(this.formServico.id)
+      Servicos.delete(this.formServico.id)
       this.limparForm()
       this.$refs.servicoModal.close()
-      this.events = this.servicos.get()
+      this.events = Servicos.get()
     },
     excluirProximosServico () {
-      this.servicos.delete(this.formServico.id)
-      this.servicos.excluirProximos(this.formServico)
+      Servicos.delete(this.formServico.id)
+      Servicos.excluirProximos(this.formServico)
       this.limparForm()
       this.$refs.servicoModal.close()
-      this.events = this.servicos.get()
+      this.events = Servicos.get()
     },
     abrirModalServico (servico) {
       this.limparForm()
@@ -231,8 +246,8 @@ export default {
     }
   },
   mounted () {
-    this.events = this.servicos.get()
-    this.feriados.get()
+    this.events = Servicos.get()
+    Feriados.get()
   }
 }
 </script>
@@ -260,4 +275,6 @@ export default {
 
 .calendar-view .week
   min-height: 6em !important
+.q-loading
+  z-index: 9999
 </style>
