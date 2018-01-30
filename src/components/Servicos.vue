@@ -156,16 +156,19 @@ export default {
     },
     submitServico () {
       this.$v.formServico.$touch()
+
       if (!this.$v.formServico.$error) {
         if (this.formServico.id) {
           this.servicos.update(this.formServico)
+          if (this.formServico.calcularProximos) {
+            this.servicos.atualizarProximosServicos(this.formServico)
+          }
         }
         else {
           this.servicos.add(this.formServico)
-        }
-
-        if (this.formServico.calcularProximos) {
-          this.servicos.calcularProximosServicos(this.formServico)
+          if (this.formServico.calcularProximos) {
+            this.servicos.calcularProximosServicos(this.formServico)
+          }
         }
 
         this.limparForm()
@@ -174,7 +177,7 @@ export default {
       }
     },
     excluirServico () {
-      this.servico.delete(this.formServico.id)
+      this.servicos.delete(this.formServico.id)
       this.limparForm()
       this.$refs.servicoModal.close()
       this.events = this.servicos.get()
