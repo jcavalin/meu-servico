@@ -48,7 +48,7 @@
       </q-modal>
 
       <q-fixed-position corner="bottom-right" :offset="[18, 18]">
-          <q-btn round color="primary" @click="adicionarFeriado" title="Adicionar feriado">
+          <q-btn round color="primary" @click="abrirModalFeriado" title="Adicionar feriado">
               <q-icon name="add" />
           </q-btn>
       </q-fixed-position>
@@ -164,7 +164,7 @@ export default {
       this.lista = this.feriados.get()
       this.$refs.popover.toggle()
     },
-    adicionarFeriado () {
+    abrirModalFeriado () {
       this.limparForm()
       this.$refs.feriadoModal.open()
     },
