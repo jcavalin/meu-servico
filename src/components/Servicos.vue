@@ -171,7 +171,7 @@ export default {
       this.$v.formServico.$touch()
       Loading.show()
 
-      let formServico = this.formServico
+      let formServico = Object.assign({}, this.formServico)
       let objRef = this
       let done = function () {
         Loading.hide()
