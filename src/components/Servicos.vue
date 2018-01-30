@@ -85,6 +85,10 @@
                        @blur="$v.formServico.title.$touch"
                        @keyup.enter="submitServico"
                        :error="$v.formServico.title.$error" />
+                  <q-datetime v-model="formServico.startDate" type="date" float-label="Data" format="DD/MM/YYYY"
+                              @blur="$v.formServico.startDate.$touch"
+                              @keyup.enter="submitServico"
+                              :error="$v.formServico.startDate.$error" />
 
                   <q-btn icon="add" color="primary" @click="submitServico" class="full-width">
                       <span>Alterar serviço</span>
@@ -175,7 +179,9 @@ export default {
       columns: [
         {
           label: 'Nome',
-          field: 'nome'
+          field: 'nome',
+          filter: true,
+          sort: true
         },
         {
           label: 'Alterar',
@@ -211,7 +217,8 @@ export default {
       vermelha: { required }
     },
     formServico: {
-      title: { required }
+      title: { required },
+      startDate: { required }
     }
   },
   methods: {
@@ -288,6 +295,10 @@ export default {
   mounted () {
     this.events = this.servicos.get()
     this.feriados.get()
+
+    // Gambiarra para resolver a falta de sort default, remover na v0.15 do quasar
+    // Ref: https://github.com/quasarframework/quasar/issues/379
+    document.querySelectorAll('.q-data-table-head table thead th')[0].click()
   }
 }
 </script>
