@@ -48,6 +48,15 @@
 
                   <q-select
                           v-model="formServico.calcularProximos"
+                          v-if="formServico.id"
+                          float-label="Alterar próximos serviços?"
+                          @keyup.enter="submitServico"
+                          :options="tiposSimNao"
+                  />
+
+                  <q-select
+                          v-model="formServico.calcularProximos"
+                          v-else="formServico.id"
                           float-label="Calcular próximos serviços?"
                           @keyup.enter="submitServico"
                           :options="tiposSimNao"
@@ -63,6 +72,9 @@
                           <q-list separator link>
                            <q-item @click="excluirServico">
                                Sim, excluir este serviço!
+                           </q-item>
+                           <q-item @click="excluirProximosServico">
+                               Sim, excluir este e os próximos serviços!
                            </q-item>
                           </q-list>
                       </q-popover>
@@ -178,6 +190,13 @@ export default {
     },
     excluirServico () {
       this.servicos.delete(this.formServico.id)
+      this.limparForm()
+      this.$refs.servicoModal.close()
+      this.events = this.servicos.get()
+    },
+    excluirProximosServico () {
+      this.servicos.delete(this.formServico.id)
+      this.servicos.excluirProximos(this.formServico)
       this.limparForm()
       this.$refs.servicoModal.close()
       this.events = this.servicos.get()

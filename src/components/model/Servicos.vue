@@ -82,14 +82,12 @@ export const Servicos = {
     return servicos
   },
   atualizarProximosServicos (servico) {
-    let calcularProximoServico = this.calcularProximoServico
     let servicosObj = this
     let ultimoServico = servico
 
     this.get().map(function (proximoServico) {
-      if (proximoServico.id !== servico.id && proximoServico.grupo === servico.grupo &&
-        moment(proximoServico.startDate).isAfter(servico.startDate)) {
-        proximoServico.startDate = calcularProximoServico(ultimoServico)
+      if (servicosObj.isProximoServico(servico, proximoServico)) {
+        proximoServico.startDate = servicosObj.calcularProximoServico(ultimoServico)
         servicosObj.update(proximoServico)
 
         ultimoServico = proximoServico
@@ -99,6 +97,15 @@ export const Servicos = {
     // Adiciona os serviços restantes
     servico.startDate = ultimoServico.startDate
     this.calcularProximosServicos(servico)
+  },
+  excluirProximos (servico) {
+    let servicosObj = this
+
+    this.get().map(function (proximoServico) {
+      if (servicosObj.isProximoServico(servico, proximoServico)) {
+        servicosObj.delete(proximoServico.id)
+      }
+    })
   },
   calcularProximoServico (servico) {
     let calcularPreta = function (servico) {
@@ -145,6 +152,10 @@ export const Servicos = {
     }
 
     return dataProximoServico
+  },
+  isProximoServico (servicoAnterior, servicoPosterior) {
+    return servicoPosterior.id !== servicoAnterior.id && servicoPosterior.grupo === servicoAnterior.grupo &&
+      moment(servicoPosterior.startDate).isAfter(servicoAnterior.startDate)
   }
 }
 </script>
