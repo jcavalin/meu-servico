@@ -6,7 +6,7 @@ export default {
 }
 export const Util = {
   generateId: function () {
-    return Math.floor(Math.random() * 999999999) + 1
+    return moment().format('YYYYMMDDHHmmss') + Math.floor(Math.random() * 999999999) + 1
   },
   isWeekendOrHoliday: function (data) {
     let diaSemana = moment(data).weekday()

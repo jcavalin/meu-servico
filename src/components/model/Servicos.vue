@@ -80,32 +80,6 @@ export const Servicos = {
     this.set(servicos)
     return servicos
   },
-  atualizarProximosServicos (servico) {
-    let servicosObj = this
-    let ultimoServico = servico
-
-    this.get().map(function (proximoServico) {
-      if (servicosObj.isProximoServico(servico, proximoServico)) {
-        proximoServico.startDate = servicosObj.calcularProximoServico(ultimoServico)
-        servicosObj.update(proximoServico)
-
-        ultimoServico = proximoServico
-      }
-    })
-
-    // Adiciona os serviços restantes
-    servico.startDate = ultimoServico.startDate
-    this.calcularProximosServicos(servico)
-  },
-  excluirProximos (servico) {
-    let servicosObj = this
-
-    this.get().map(function (proximoServico) {
-      if (servicosObj.isProximoServico(servico, proximoServico)) {
-        servicosObj.delete(proximoServico.id)
-      }
-    })
-  },
   calcularProximoServico (servico) {
     let calcularPreta = function (servico) {
       let qtdDias = 1
@@ -148,6 +122,32 @@ export const Servicos = {
     }
 
     return dataProximoServico
+  },
+  atualizarProximosServicos (servico) {
+    let servicosObj = this
+    let ultimoServico = servico
+
+    this.get().map(function (proximoServico) {
+      if (servicosObj.isProximoServico(servico, proximoServico)) {
+        proximoServico.startDate = servicosObj.calcularProximoServico(ultimoServico)
+        servicosObj.update(proximoServico)
+
+        ultimoServico = proximoServico
+      }
+    })
+
+    // Adiciona os serviços restantes
+    servico.startDate = ultimoServico.startDate
+    this.calcularProximosServicos(servico)
+  },
+  excluirProximos (servico) {
+    let servicosObj = this
+
+    this.get().map(function (proximoServico) {
+      if (servicosObj.isProximoServico(servico, proximoServico)) {
+        servicosObj.delete(proximoServico.id)
+      }
+    })
   },
   isProximoServico (servicoAnterior, servicoPosterior) {
     return servicoPosterior.id !== servicoAnterior.id && servicoPosterior.grupo === servicoAnterior.grupo &&
