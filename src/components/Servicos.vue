@@ -9,6 +9,18 @@
                   :events="events"
                   class=""
           />
+
+          <h5>Escalas</h5>
+          <q-data-table
+              :data="escalas.get()"
+              :config="config"
+              :columns="columns"
+          >
+              <template slot="col-id" slot-scope="escala">
+                  <q-btn round icon="mode_edit" color="info" @click="alterarEscala(escala.data)">
+                  </q-btn>
+              </template>
+          </q-data-table>
       </div>
 
       <q-modal ref="escalaModal" :content-css="{minWidth: '50vw', minHeight: '55vh'}">
@@ -103,7 +115,7 @@
 </template>
 
 <script>
-import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, QFab, QPopover, QList, QItem } from 'quasar'
+import { QBtn, QIcon, QFixedPosition, QModal, QModalLayout, QToolbar, QInput, QDatetime, QFab, QPopover, QList, QItem, QDataTable } from 'quasar'
 import { required } from 'vuelidate/lib/validators'
 import { Feriados } from './model/Feriados'
 import { Escalas } from './model/Escalas'
@@ -134,7 +146,45 @@ export default {
       escalas: Escalas,
       feriados: Feriados,
       servicos: Servicos,
-      events: []
+      events: [],
+      lista: [],
+      config: {
+        responsive: false,
+        pagination: {
+          rowsPerPage: 5,
+          options: [5, 10, 15, 30, 50]
+        },
+        messages: {
+          noData: 'Nenhuma escala incluída.',
+          noDataAfterFiltering: 'Nenhuma escala encontrada.'
+        },
+        // (optional) Override default labels. Useful for I18n.
+        labels: {
+          allCols: 'Todas as colunas',
+          columns: 'Colunas',
+          rows: 'Linhas',
+          selected: {
+            singular: 'item selecionado.',
+            plural: 'item selecionado.'
+          },
+          clear: 'limpar',
+          search: 'Pesquisar',
+          all: 'Todas'
+        }
+      },
+      columns: [
+        {
+          label: 'Nome',
+          field: 'nome'
+        },
+        {
+          label: 'Alterar',
+          field: 'id',
+          filter: false,
+          width: '7em',
+          type: 'string'
+        }
+      ]
     }
   },
   components: {
@@ -150,7 +200,8 @@ export default {
     QFab,
     QPopover,
     QList,
-    QItem
+    QItem,
+    QDataTable
   },
   validations: {
     formEscala: {
@@ -193,7 +244,7 @@ export default {
       }
     },
     excluirEscala () {
-      this.escalas.delete(this.form.id)
+      this.escalas.delete(this.formEscala.id)
       this.limparForm()
       this.$refs.escalaModal.close()
       this.events = this.servicos.get()
@@ -202,8 +253,8 @@ export default {
       this.limparForm()
       this.$refs.escalaModal.open()
     },
-    alterarEscala (event) {
-      this.form = this.escalas.getById(event.escala_id)
+    alterarEscala (id) {
+      this.formEscala = this.escalas.getById(id)
       this.$refs.escalaModal.open()
     },
     abrirModalServico (event) {
@@ -216,7 +267,7 @@ export default {
       this.$refs.popoverUpdateServico.toggle()
     },
     limparForm () {
-      this.form = {
+      this.formEscala = {
         id: null,
         nome: null,
         folga: null,
@@ -260,5 +311,8 @@ export default {
   display: none
 
 .calendar-view
-  margin-bottom: 6em
+  margin-bottom: 3em
+
+.q-data-table
+  margin-bottom: 12em
 </style>

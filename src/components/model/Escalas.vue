@@ -34,10 +34,11 @@ export const Escalas = {
   },
   update: function (escalaUpdate) {
     let escalas = this.get()
+    let escalasObj = this
     escalas.forEach(function (escala, index) {
       if (escala.id === escalaUpdate.id) {
         escalas[index] = escalaUpdate
-        this.set(escalas)
+        escalasObj.set(escalas)
         return escala
       }
     })
