@@ -7,7 +7,7 @@ export default {
 
 }
 export const Feriados = {
-  key: 'feriados_',
+  key: 'feriados',
   set: function (feriados) {
     LocalStorage.set(this.key, feriados)
   },

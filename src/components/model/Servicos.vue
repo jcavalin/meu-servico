@@ -1,6 +1,5 @@
 <script>
 import { LocalStorage } from 'quasar'
-import { Escalas } from './Escalas'
 import { Feriados } from './Feriados'
 import { Util } from './Util'
 import moment from 'moment'
@@ -15,19 +14,19 @@ export const Servicos = {
   },
   get: function () {
     let servicos = LocalStorage.get.item(this.key)
-    servicos = servicos || this.calcularServicos()
+    servicos = servicos || []
     return servicos
   },
   getById: function (id) {
-    let servicoEncontrada = null
+    let servicoEncontrado = null
     this.get().forEach(function (servico) {
       if (servico.id === id) {
-        servicoEncontrada = servico
-        return servicoEncontrada
+        servicoEncontrado = servico
+        return servicoEncontrado
       }
     })
 
-    return servicoEncontrada
+    return servicoEncontrado
   },
   add: function (servico) {
     servico.id = Util.generateId()
@@ -57,49 +56,40 @@ export const Servicos = {
       }
     })
   },
-  calcularServicos () {
-    let calcularServico = this.calcularServico
-    let escalas = Escalas.get()
-    let servicos = []
+  calcularProximosServicos (servico) {
+    let calcularProximoServico = this.calcularProximoServico
+    let servicos = this.get()
 
-    escalas.map(function (escala) {
-      let montarServico = function (escala, data, tipo) {
-        return {
-          id: Util.generateId(),
-          escala_id: escala.id,
-          title: escala.nome,
-          startDate: data,
-          classes: tipo
-        }
+    let montarServico = function (servico, data) {
+      return {
+        id: Util.generateId(),
+        servicoPai: servico.id,
+        title: servico.title,
+        folga: servico.folga,
+        startDate: data,
+        classes: servico.classes
       }
+    }
 
-      if (escala.nome) {
-        let ultimaEscala = escala
-        servicos.push(montarServico(ultimaEscala, new Date(ultimaEscala.preta), 'preta'))
-        servicos.push(montarServico(ultimaEscala, new Date(ultimaEscala.vermelha), 'vermelha'))
+    if (servico.title) {
+      let ultimoServico = servico
 
-        while (moment().add(1, 'years').isAfter(ultimaEscala.preta)) {
-          let datasServico = calcularServico(ultimaEscala)
-
-          servicos.push(montarServico(ultimaEscala, datasServico.preta, 'preta'))
-          servicos.push(montarServico(ultimaEscala, datasServico.vermelha, 'vermelha'))
-
-          ultimaEscala.preta = datasServico.preta
-          ultimaEscala.vermelha = datasServico.vermelha
-        }
+      while (moment().add(1, 'years').isAfter(ultimoServico.startDate)) {
+        ultimoServico = montarServico(ultimoServico, calcularProximoServico(ultimoServico))
+        servicos.push(ultimoServico)
       }
-    })
+    }
 
     this.set(servicos)
     return servicos
   },
-  calcularServico (escala) {
-    let calcularPreta = function (escala) {
+  calcularProximoServico (servico) {
+    let calcularPreta = function (servico) {
       let qtdDias = 1
-      let dataAtual = moment(escala.preta).add(1, 'days')
+      let dataAtual = moment(servico.startDate).add(1, 'days')
       let diaSemana = dataAtual.weekday()
 
-      while (qtdDias <= escala.folga || diaSemana === 0 || diaSemana === 6 || Feriados.is(dataAtual)) {
+      while (qtdDias <= servico.folga || diaSemana === 0 || diaSemana === 6 || Feriados.is(dataAtual)) {
         if (diaSemana !== 0 && diaSemana !== 6 && !Feriados.is(dataAtual)) {
           qtdDias++
         }
@@ -111,11 +101,11 @@ export const Servicos = {
       return dataAtual.toDate()
     }
 
-    let calcularVermelha = function (escala) {
+    let calcularVermelha = function (servico) {
       let qtdDias = 1
-      let dataAtual = moment(escala.vermelha).add(1, 'days')
+      let dataAtual = moment(servico.startDate).add(1, 'days')
       let diaSemana = dataAtual.weekday()
-      while (qtdDias <= escala.folga || (diaSemana !== 0 && diaSemana !== 6 && !Feriados.is(dataAtual))) {
+      while (qtdDias <= servico.folga || (diaSemana !== 0 && diaSemana !== 6 && !Feriados.is(dataAtual))) {
         if (diaSemana === 0 || diaSemana === 6 || Feriados.is(dataAtual)) {
           qtdDias++
         }
@@ -127,10 +117,17 @@ export const Servicos = {
       return dataAtual.toDate()
     }
 
-    return {
-      preta: calcularPreta(escala),
-      vermelha: calcularVermelha(escala)
+    let dataProximoServico = null
+    switch (servico.classes) {
+      case 'preta' :
+        dataProximoServico = calcularPreta(servico)
+        break
+      case 'vermelha' :
+        dataProximoServico = calcularVermelha(servico)
+        break
     }
+
+    return dataProximoServico
   }
 }
 </script>
