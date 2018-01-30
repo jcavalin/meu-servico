@@ -130,6 +130,9 @@ export const Servicos = {
     this.get().map(function (proximoServico) {
       if (servicosObj.isProximoServico(servico, proximoServico)) {
         proximoServico.startDate = servicosObj.calcularProximoServico(ultimoServico)
+        proximoServico.title = ultimoServico.title
+        proximoServico.classes = ultimoServico.classes
+        proximoServico.folga = ultimoServico.folga
         servicosObj.update(proximoServico)
 
         ultimoServico = proximoServico
