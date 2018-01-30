@@ -248,4 +248,7 @@ export default {
 
 .calendar-view
   margin-bottom: 6em
+
+.calendar-view .week
+  min-height: 6em !important
 </style>
