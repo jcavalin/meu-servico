@@ -111,6 +111,10 @@ export const Servicos = {
       return dataAtual.toDate()
     }
 
+    let calcularCorrida = function (servico) {
+      return moment(servico.startDate).add(servico.folga + 1, 'days').toDate()
+    }
+
     let dataProximoServico = null
     switch (servico.classes) {
       case 'preta' :
@@ -118,6 +122,9 @@ export const Servicos = {
         break
       case 'vermelha' :
         dataProximoServico = calcularVermelha(servico)
+        break
+      case 'corrida' :
+        dataProximoServico = calcularCorrida(servico)
         break
     }
 

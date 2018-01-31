@@ -141,6 +141,10 @@ export default {
         {
           label: 'Vermelha',
           value: 'vermelha'
+        },
+        {
+          label: 'Corrida',
+          value: 'corrida'
         }
       ],
       tiposSimNao: [
@@ -262,6 +266,10 @@ export default {
 
 .vermelha
   background-color: #D91E18 !important
+  color: #FFFFFF
+
+.corrida
+  background-color: #3598DC !important
   color: #FFFFFF
 
 .margin-top
