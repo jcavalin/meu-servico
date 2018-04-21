@@ -25,6 +25,9 @@
 
               <div class="col-md-6">
                   <h5>Exportar</h5>
+                  <q-btn icon="content_copy" color="primary" class="full-width" v-clipboard:copy="exp" v-clipboard:success="onCodeCopy" v-clipboard:error="onErrorCopy">
+                      Copiar código
+                  </q-btn>
                   <q-input
                       v-model="exp"
                       float-label="Copie o código abaixo"
@@ -67,15 +70,15 @@ export default {
   },
   methods: {
     exportar () {
-      return btoa(JSON.stringify({
+      return (JSON.stringify({
         feriados: Feriados.get(),
         servicos: Servicos.get()
       }))
     },
     importar (exp) {
       try {
-        let imp = JSON.parse(atob(exp.trim()))
-        console.log(imp)
+        let imp = JSON.parse((exp.trim()))
+
         if (imp.feriados && imp.servicos) {
           Feriados.set(imp.feriados)
           Servicos.set(imp.servicos)
@@ -106,6 +109,16 @@ export default {
           html: 'Erro ao tentar importar o código informado.'
         })
       }
+    },
+    onCodeCopy () {
+      Toast.create.positive({
+        html: 'Código copiado.'
+      })
+    },
+    onErrorCopy () {
+      Toast.create.negative({
+        html: 'Erro ao tentar copiar o código.'
+      })
     }
   },
   mounted () {

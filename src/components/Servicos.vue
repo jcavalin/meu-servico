@@ -12,7 +12,7 @@
           />
       </div>
 
-      <q-modal ref="servicoModal" :content-css="{minWidth: '50vw', minHeight: '55vh'}">
+      <q-modal ref="servicoModal" :content-css="{minWidth: '50vw', minHeight: '70vh'}">
 
           <q-modal-layout>
               <q-toolbar slot="header">
@@ -283,6 +283,7 @@ export default {
 
 .calendar-view .week
   min-height: 6em !important
+
 .q-loading
   z-index: 9999
 </style>

@@ -16,6 +16,7 @@
     "quasar-extras": "0.x",
     "quasar-framework": "^0.14.6",
     "vue": "^2.5.2",
+    "vue-clipboard2": "^0.1.0",
     "vue-router": "^2.7.0",
     "vue-simple-calendar": "^2.1.1",
     "vuelidate": "^0.6.1"

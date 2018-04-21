@@ -21,7 +21,7 @@
           </q-data-table>
       </div>
 
-      <q-modal ref="feriadoModal" :content-css="{minWidth: '50vw', minHeight: '55vh'}">
+      <q-modal ref="feriadoModal" :content-css="{minWidth: '50vw', minHeight: '40vh'}">
           <q-modal-layout>
               <q-toolbar slot="header">
                   <q-btn flat @click="$refs.feriadoModal.close()">
